@@ -4,11 +4,10 @@
 
 こちらのリポジトリは, GitHooksによって, 元リポジトリのmainへのpushに応じて更新されます
 
-
 作品についての詳細は[こちら](./docs/README.md)のmdファイルを参照してください
 
 Assets/Scriptsに, 成果物のソースコードを乗せています
 
 ※VoiceProcessingのコードは, 成果物には使っていません
 
-その他, docsの[Credits.md](./docs/Credits.md)や, [References.md](./docs/References.md)に使用させていただいた素材やライブラリ等を記載したのでそちらもご確認ください
+その他, docsの[Credits.md](./docs/Credits.md)や, [References.md](./docs/References.Md)に使用させていただいた素材やライブラリ等を記載したのでそちらもご確認ください
