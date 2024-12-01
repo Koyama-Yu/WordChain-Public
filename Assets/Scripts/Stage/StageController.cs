@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ステージ全体の管理を行うクラス
+/// </summary>
 public class StageController : MonoBehaviour
 {
     private StageGameStateMachine _stateMachine;

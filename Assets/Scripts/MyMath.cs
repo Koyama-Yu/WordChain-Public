@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace MyUtilities
 {
+    /// <summary>
+    /// 数学関連の処理をまとめたクラス
+    /// </summary>
     public class MyMath
     {
         public static bool Probability(float probability)

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの状態における処理を記述する基底クラス
+/// </summary>
 public abstract class PlayerStateBase : IState
 {
     protected Player _player;

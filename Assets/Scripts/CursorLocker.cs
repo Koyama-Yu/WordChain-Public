@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// カーソルの表示・非表示を切り替えるクラス
+/// </summary>
 public class CursorLocker : Singleton<CursorLocker>
 {
     private bool _cursorLock = true;
@@ -12,6 +12,10 @@ public class CursorLocker : Singleton<CursorLocker>
         UpdateCrusorLock();
     }
 
+    /// <summary>
+    /// カーソルの表示・非表示を切り替える
+    /// 左クリックでゲームに入ると非表示、ESCキーで表示
+    /// </summary>
     private void UpdateCrusorLock()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

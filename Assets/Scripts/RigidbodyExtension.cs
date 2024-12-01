@@ -5,11 +5,10 @@
 //  Created by kan kikuchi on 2015.11.26.
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
-
-//一時停止時の速度を保管するクラス
+/// <summary>
+/// 一時停止時の速度を保管するクラス
+/// </summary>
 public class VelocityTmp : MonoBehaviour
 {
     //一時停止時の速度

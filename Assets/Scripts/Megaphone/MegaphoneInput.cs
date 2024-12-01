@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
+/// <summary>
+/// メガホンの入力を管理するクラス
+/// </summary>
 public class MegaphoneInput : InputBase
 {
     [Header("マウスから射撃系統の入力")]
@@ -16,14 +16,12 @@ public class MegaphoneInput : InputBase
     private bool _isScoping;
     public bool IsScoping => _isScoping;
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
+        // 入力受付不可の場合は何もしない
         if (!_canGetInput) { return; }
+
+        // 入力情報の取得
         _changeAlphabetWheelScroll = Input.GetAxis("Mouse ScrollWheel");
         _isShooting = HasPressedMouseButtons(_shotButtons);
         _isScoping = HasPressedMouseButtons(_scopeButtons);

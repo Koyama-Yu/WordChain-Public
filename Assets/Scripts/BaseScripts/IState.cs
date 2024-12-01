@@ -1,6 +1,9 @@
+// Unity公式のデザインパターンのサンプルを参考に作成
+// https://github.com/Unity-Technologies/game-programming-patterns-demo
 
-using UnityEngine;
-
+/// <summary>
+/// ステートマシンのインターフェース
+/// </summary>
 public interface IState
 {
     /// <summary>

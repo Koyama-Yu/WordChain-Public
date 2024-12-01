@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// スタミナを管理するクラス
+/// </summary>
 public class Stamina : MonoBehaviour
 {
 

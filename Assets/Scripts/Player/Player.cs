@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine;
+// using UnityEngine.UI;
 using UniRx;
 
+//! Unused
 // using Unity.VisualScripting;
 // using Unity.VisualScripting.Antlr3.Runtime.Tree;
 // using UnityEditor.Experimental.GraphView;
 
-using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerInput), typeof(PlayerMovement), typeof(PlayerSight))]
 public class Player : MonoBehaviour
@@ -35,10 +34,9 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip("スタミナの減少スピード")]
     private float _staminaDecreaseSpeed;
 
-    //public GameObject alphabet; //弾のプレハブ
+    [Header("メガホン")]
     [SerializeField]
     private GameObject _megaPhone; //メガホンのプレハブ
-    //public Transform Nozzle; //弾の発射位置
 
     //プレイヤー関連のコンポーネント
     private PlayerInput _input;
@@ -94,6 +92,9 @@ public class Player : MonoBehaviour
         RegisterStaminaUpdate();
     }
 
+    /// <summary>
+    /// スタミナの更新を行うイベントの登録
+    /// </summary>
     private void RegisterStaminaUpdate()
     {
         _staminaSubscription = Observable.EveryUpdate()
@@ -104,6 +105,9 @@ public class Player : MonoBehaviour
             .AddTo(this.gameObject);
     }
 
+    /// <summary>
+    /// スタミナの更新を行うイベントの解除
+    /// </summary>
     private void DisposeStaminaUpdate()
     {
         _staminaSubscription?.Dispose();
@@ -111,6 +115,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        //入力情報の取得
         Vector3 keyInputVector = _input.KeyInputVector;
         Vector2 mouseInputVector = _input.MouseInputVector;
 
@@ -131,6 +136,7 @@ public class Player : MonoBehaviour
         //ダッシュ判定
         _isDashing = _input.IsDashing;
 
+        //接地しているときのみジャンプ可能
         if (_movement.IsGrounded(_groundCheckPoint, _groundLayer))
         {
             //ジャンプ関数の呼び出し
@@ -147,26 +153,28 @@ public class Player : MonoBehaviour
         Debug.DrawRay(transform.position, transform.forward * 10, Color.blue);
     }
 
+    // HPを渡す
+    // TODO これを使わないように変更
     public int GetHealthPoint()
     {
         return _healthPoint;
     }
 
+    // スタミナを渡す
+    // TODO これを使わないように変更
     public float GetStamina()
     {
         return _stamina;
     }
 
-    public void Shot()
-    {
-        //_megaPhone.Shot();
-    }
-
-    //のちに変更予定
+    /// <summary>
+    ///  プレイヤーの状態においてスタミナの変更を行う
+    /// </summary>
+    /// <param name="isDashing"></param>
+    /// <param name="isTired"></param>
+    //TODO のちに変更予定
     private void ChangeStamina(bool isDashing, bool isTired)
     {
-        
-
         //疲れていないあるいはダッシュしていないときスタミナ回復
         if (isTired || !isDashing) 
         {
@@ -181,6 +189,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// プレイヤーの疲れ具合をチェックし、_isTiredを更新する
+    /// </summary>
     private void CheckTiredness()
     {
         //スタミナが0以下になったら疲れる
@@ -195,6 +206,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ゲームストップ時のイベント登録
+    /// </summary>
     private void RegisterPauseEvent()
     {
         StageGameTimeManager.OnPaused.Subscribe( _ =>
@@ -209,6 +223,9 @@ public class Player : MonoBehaviour
         }).AddTo(this.gameObject);
     }
 
+    /// <summary>
+    /// ゲーム再開時のイベント登録
+    /// </summary>
     private void RegisterResumeEvent()
     {
         StageGameTimeManager.OnResumed.Subscribe( _ =>

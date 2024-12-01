@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-//using Microsoft.Unity.VisualStudio.Editor;
-//using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// プレイヤーのHPを管理するクラス
+/// </summary>
+//TODO! のちにMVPのModelに変更予定
 public class Health : MonoBehaviour
 {
     [SerializeField, Header("HPアイコン")]
@@ -20,6 +20,9 @@ public class Health : MonoBehaviour
         CreateHealthPointIcon();
     }
 
+    /// <summary>
+    /// HPアイコンを生成する
+    /// </summary>
     private void CreateHealthPointIcon(){
         for(int i = 0; i< _player.GetHealthPoint(); i++){
             GameObject hpIconObject = Instantiate(_healthPointIcon);

@@ -1,12 +1,19 @@
+// gomafrontier.com様を参考にしました
+// https://gomafrontier.com/unity/3720
+
 using System;
 using UnityEngine;
 using UniRx;
 
+/// <summary>
+/// ステージ内のゲーム時間を管理するクラス
+/// </summary>
 public class StageGameTimeManager : MonoBehaviour
 {
     private static Subject<string> _pauseSubject = new Subject<string>();
     private static Subject<string> _resumeSubject = new Subject<string>();
 
+    //! Unused
     private static bool _isPaused = false;
     public static bool IsPaused => _isPaused;
 

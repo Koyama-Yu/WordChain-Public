@@ -1,7 +1,9 @@
 using UnityEngine;
 using MyUtilities;
-using System.Runtime.CompilerServices;
 
+/// <summary>
+/// 敵の視界を管理するクラス
+/// </summary>
 public class EnemySight : MonoBehaviour
 {
     [Header("視界設定")]
@@ -12,6 +14,9 @@ public class EnemySight : MonoBehaviour
     [SerializeField, Tooltip("障害物レイヤー")]
     private LayerMask _obstacleLayer;       // 障害物のレイヤーマスク
 
+    /// <summary>
+    /// ターゲットが視界内にいるか確認
+    /// </summary>
     public bool CanSeeTarget(Vector3 targetPosition)
     {
         // ターゲットの方向を取得
@@ -21,7 +26,6 @@ public class EnemySight : MonoBehaviour
         if (Vector3.Dot(transform.forward, targetDirection.normalized) > MyMath.Cos(_sightAngle)
             && MyMath.CheckNear(transform.position, targetPosition, _viewMaxDistance))
         {
-            //Debug.Log("In View");
             // レイキャストでターゲットとの間に障害物があるなら false
             RaycastHit hit;
             if (Physics.Raycast(transform.position, targetDirection, out hit, _viewMaxDistance, _obstacleLayer))
@@ -38,6 +42,9 @@ public class EnemySight : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// ターゲットへのベクトルを計算
+    /// </summary>
     public Vector3 CalculateVectorTo(Vector3 targetPosition)
     {
         return (targetPosition - transform.position).normalized;
@@ -46,6 +53,7 @@ public class EnemySight : MonoBehaviour
     #region Debug
     #if UNITY_EDITOR
 
+    // デバッグ用に, シーンビューに視界を描画
     void OnDrawGizmos()
     {
         // Gizmos描画をここに書く

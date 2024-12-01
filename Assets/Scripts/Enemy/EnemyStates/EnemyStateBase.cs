@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 敵のステートに応じて処理を行う基底クラス
+/// </summary>
 public abstract class EnemyStateBase : IState
 {
     protected EnemyController _enemy;

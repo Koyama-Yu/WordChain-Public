@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 敵のUIをカメラに追従させるクラス
+/// </summary>
 public class EnemyUICameraFollower : MonoBehaviour
 {
     void LateUpdate() {

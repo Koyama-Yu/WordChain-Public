@@ -1,8 +1,10 @@
+// Unity公式のデザインパターンのサンプルを参考に作成
+// https://github.com/Unity-Technologies/game-programming-patterns-demo
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+/// <summary>
+/// ステートマシンクラス
+/// </summary>
 [Serializable]
 public class StateMachine
 {

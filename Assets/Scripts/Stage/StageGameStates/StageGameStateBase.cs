@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Stageでとりうる各State(Pause, Clearなど)の基底クラス
+/// </summary>
 public abstract class StageGameStateBase : IState
 {
     protected StageController _stage;

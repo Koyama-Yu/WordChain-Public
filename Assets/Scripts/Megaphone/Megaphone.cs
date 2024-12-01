@@ -1,31 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using UnityEditor;
-using System.Runtime.CompilerServices;
 using UniRx;
 
 public class Megaphone : MonoBehaviour
 {
     [Header("メガホンの諸設定")]
     [SerializeField, Tooltip("アルファベットのプレハブが入っているフォルダのパス")]
-    private string _alphabetPrefabFolerPath;
+    private string _alphabetPrefabFolerPath;    //! Unused
     private GameObject[] _alphabetPrefabs;
     [SerializeField, Tooltip("アルファベットのプレハブを発射する位置(走ってるとき以外)")]
     private Transform _nonDashNozzle;
     [SerializeField, Tooltip("アルファベットのプレハブを発射する位置(走ってるとき)")]
     private Transform _DashNozzle;
 
-    private Player _player;
-    private MegaphoneInput _megaphoneInput;
+    
 
-    [SerializeField]
+    [SerializeField, Tooltip("アルファベットの発射力(走っていない時)")]
     private float _baseForceStrength = 700.0f;
+    [SerializeField, Tooltip("アルファベットの発射力(走っている時)")]
     private float _runningForceStrength = 800.0f;
-    //public float forwardOffset = 1.5f;
 
+    private MegaphoneInput _megaphoneInput;
+    private Player _player;
     private PlayerInput _playerInput;
 
     private int _selectedAlphabetIndex = 0;
@@ -42,11 +38,12 @@ public class Megaphone : MonoBehaviour
 
     private void Awake()
     {
-        _resourcesLoader = FindObjectOfType<ResourcesLoader>();
-        if (_resourcesLoader != null)
-        {
-            _resourcesLoader.PrefabsLoaded += OnPrefabsLoaded;
-        }
+        // TODO のちにResourcesLoaderを使ってのロードを実装(あるいはAssetBundle)
+        // _resourcesLoader = FindObjectOfType<ResourcesLoader>();
+        // if (_resourcesLoader != null)
+        // {
+        //     _resourcesLoader.PrefabsLoaded += OnPrefabsLoaded;
+        // }
     }
 
     private void Start()
@@ -68,15 +65,23 @@ public class Megaphone : MonoBehaviour
         //デバッグ用
         Debug.DrawRay(transform.position, transform.forward * 10, Color.red);
 
+        // アルファベットの切り替え
         _currentAlpabetCharactor = (char)('A' + _selectedAlphabetIndex);
         SwitchAlphabet();
+
+        // アルファベットの発射
         if (_megaphoneInput.IsShooting)
         {
             Shot();
         }
+
+        // UIの更新
         RenewUI();
     }
 
+    /// <summary>
+    /// アルファベットを発射する関数
+    /// </summary>
     private void Shot()
     {
         // TODO _playerInputのメンバはなるべくキャッシュして使いたい
@@ -125,6 +130,9 @@ public class Megaphone : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// アルファベットのプレハブをロードする関数
+    /// </summary>
     private void LoadAlphabetPrefabs()
     {
         // 指定フォルダ内のすべてのプレハブをロード
@@ -133,16 +141,28 @@ public class Megaphone : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// UIの更新
+    // TODO のちに残弾ゲージなどを追加した場合もここに書く
+    /// </summary>
     private void RenewUI()
     {
         _selectedAlphabetText.text = _currentAlpabetCharactor.ToString();
     }
 
+    /// <summary>
+    /// プレハブのロードが完了した際のコールバック関数
+    /// </summary>
+    /// <param name="prefabs"></param>
     private void OnPrefabsLoaded(GameObject[] prefabs)
     {
         _alphabetPrefabs = prefabs;
     }
 
+    /// <summary>
+    /// プレハブロードのイベント
+    //! Unused
+    /// </summary>
     private void OnDestroy()
     {
         if (_resourcesLoader != null)
@@ -151,6 +171,9 @@ public class Megaphone : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ポーズ時の動作を登録
+    /// </summary>
     private void RegisterPauseEvent()
     {
         StageGameTimeManager.OnPaused.Subscribe( _ =>
@@ -158,9 +181,11 @@ public class Megaphone : MonoBehaviour
             _megaphoneInput.DisableInput();
             
         }).AddTo(this.gameObject);
-
     }
 
+    /// <summary>
+    /// 再開時の動作を登録
+    /// </summary>
     private void RegisterResumeEvent()
     {
         StageGameTimeManager.OnResumed.Subscribe( _ =>

@@ -1,7 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+// Unity公式のデザインパターンのサンプルを参考に作成
+// https://github.com/Unity-Technologies/game-programming-patterns-demo
+
 using UnityEngine;
 
+/// <summary>
+/// シングルトンパターンの基底クラス(ジェネリック)
+/// </summary>
 public class Singleton<T> : MonoBehaviour where T : Component
 {
     private static T _instance;

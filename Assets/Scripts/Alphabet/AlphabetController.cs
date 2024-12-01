@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 //using System.Numerics;
 using UnityEngine;
 using UniRx;
@@ -7,17 +5,15 @@ using UniRx;
 public class AlphabetController : MonoBehaviour
 {
     [Header("弾(アルファベットの)基本ステータス")]
-    [SerializeField, Tooltip("敵に与えるダメージ")] private int _damagePoint = 1;
-    [SerializeField, Tooltip("弾の速度")] private float _shootingSpeed = 5.0f;
+    [SerializeField, Tooltip("弾の速度")] private float _shootingSpeed = 5.0f;  //! Unused
     [SerializeField, Tooltip("弾の生存時間")] private float _lifeTime = 3.0f;
 
     private Rigidbody _rigidbody;
-    private float _remainingLifeTime;
+    private float _remainingLifeTime;   // アルファベットの残り生存時間
     private bool _isPaused = false;
 
     private void Start()
     {
-        //Destroy(this.gameObject, _lifeTime);
         RemoveCloneFromName();
 
         _rigidbody = GetComponent<Rigidbody>();
@@ -32,38 +28,41 @@ public class AlphabetController : MonoBehaviour
 
     private void Update()
     {
+        // 停止時は処理を行わない
         if (_isPaused) { return; }
 
+        // 残り生存時間を減らす
         _remainingLifeTime -= Time.deltaTime;
 
+        // 生存時間が0以下になったら削除
         if (_remainingLifeTime < 0)
         {
             Destroy(this.gameObject);
         }
     }
 
-    public void MoveVector(Vector3 direction)
-    {
-        transform.Translate(direction * _shootingSpeed * Time.deltaTime);
-    }
-
     private void OnCollisionEnter(Collision other)
     {
+        // 敵に当たったらその敵にアルファベットを付与
         if (other.gameObject.tag == "Enemy")
         {
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
-            //enemy.HasTakenDamage(_damagePoint);
             enemy.HasTakenAlphabet(gameObject.name);
             Destroy(this.gameObject);
         }
-        //Debug.Log("Hit");
     }
 
+    /// <summary>
+    /// プレハブ生成時にクローンの名前から(Clone)を削除
+    /// </summary>
     private void RemoveCloneFromName()
     {
         gameObject.name = gameObject.name.Replace("(Clone)", "");
     }
 
+    /// <summary>
+    /// ポーズ時の動作を登録
+    /// </summary>
     private void RegisterPauseEvent()
     {
         StageGameTimeManager.OnPaused.Subscribe(_ =>
@@ -74,6 +73,9 @@ public class AlphabetController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 再開時の動作を登録
+    /// </summary>
     private void RegisterResumeEvent()
     {
         StageGameTimeManager.OnResumed.Subscribe(_ =>

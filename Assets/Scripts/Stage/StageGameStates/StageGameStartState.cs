@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StageGameStartState : StageGameStateBase
 {
-    private IEnumerator _enumerator = null;
-    // private float _timeSinceSceneStart;
+    private IEnumerator _enumerator = null; // カウントダウン用のコルーチン
     public int COUNTDOWN_DURATION = 3;
 
     // コンストラクタ
@@ -22,7 +20,7 @@ public class StageGameStartState : StageGameStateBase
         // コルーチンの作成
         _enumerator = StartCountdown();
 
-        // Time.timeScale = 0.0f;
+        // ゲーム(ステージのオブジェクト類)を一時停止
         StageGameTimeManager.Pause();
     }
 
@@ -32,7 +30,6 @@ public class StageGameStartState : StageGameStateBase
         if (_enumerator != null && !_enumerator.MoveNext())
         {
             _enumerator = null;
-            // Time.timeScale = 1.0f;
             StageGameTimeManager.Resume();
             _stage.StateMachine.TransitionTo(_stage.StateMachine.PlayState);
         }
@@ -45,6 +42,10 @@ public class StageGameStartState : StageGameStateBase
     // }
 
 
+    /// <summary>
+    /// Start時にカウントダウンを行うコルーチン
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StartCountdown()
     {
         for (int i = COUNTDOWN_DURATION; i > 0; i--)

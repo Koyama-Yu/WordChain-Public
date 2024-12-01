@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 //using MathNet.Numerics.LinearAlgebra;
-
-//using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.PlayerLoop;
 
-
+/// <summary>
+/// 敵の移動を管理するクラス
+/// TODO 現在はNavMeshによる処理をStateMachineで記述ているがこっちに書くようにする(関数化などする)
+/// </summary>
 public class EnemyMovement : MonoBehaviour
 {
     [Header("移動")]
@@ -29,18 +27,16 @@ public class EnemyMovement : MonoBehaviour
     {
         Initialize();
     }
+
+    private void Initialize()
+    {
+        _agent = GetComponent<NavMeshAgent>();
+    }
+
     private void Update()
     {
-        //Debug.Log(_currentSpeed);
+        //Move();
     }
-
-    //水平方向(前後左右)の移動
-    public void Move(bool isVisibleTarget, Vector3 targetPosition)
-    {
-        //SetDestination(isVisibleTarget, targetPosition);
-        //Debug.Log(_currentSpeed);
-    }
-
 
     //TODO 後からここはこれは変更する予定
     private void ChangeSpeed(bool isVisibleTarget)
@@ -55,11 +51,12 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    private void Initialize()
-    {
-        _agent = GetComponent<NavMeshAgent>();
-    }
-
+    /// <summary>
+    /// 状態に応じて, NavMeshAgentの目的地を設定する
+    //! Unused
+    /// </summary>
+    /// <param name="isVisibleTarget"></param>
+    /// <param name="targetPosition"></param>
     private void SetDestination(bool isVisibleTarget, Vector3 targetPosition)
     {
         if (isVisibleTarget)
@@ -77,17 +74,6 @@ public class EnemyMovement : MonoBehaviour
             _agent.SetDestination(NextPosition);  //目的地の設定
             _agent.stoppingDistance = _wanderStoppingDistance; //目的地に到着したときの停止距離
 
-            // _agent.ResetPath();
-            // if (!_agent.hasPath)
-            // {
-            //     float newX = transform.position.x + Random.Range(-5, 5);
-            //     float newZ = transform.position.z + Random.Range(-5, 5);
-
-            //     Vector3 NextPosition = new Vector3(newX, transform.position.y, newZ);
-
-            //     _agent.SetDestination(NextPosition);  //目的地の設定
-            //     _agent.stoppingDistance = _wanderStoppingDistance; //目的地に到着したときの停止距離
-            // }
         }
 
         ChangeSpeed(isVisibleTarget);

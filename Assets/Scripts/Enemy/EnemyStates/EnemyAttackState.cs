@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MyUtilities;
 
+//! Unused
 public class EnemyAttackState : EnemyStateBase
 {
     // コンストラクタ

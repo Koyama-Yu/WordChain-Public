@@ -1,7 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 敵の破壊を管理するクラス
+//! Unused
+/// </summary>
 public class DestroyEnemy : MonoBehaviour
 {
     private bool _deadJudge;

@@ -1,18 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyUtilities;
-using NUnit.Framework;
 using UnityEngine.UI;
 using UniRx;
-using System.Runtime.CompilerServices;
 
 public class EnemyController : MonoBehaviour
 {
-
-    enum STATE { IDLE, WANDER, CHASE, ATTACK, DEAD };
-    STATE state = STATE.IDLE;
-
     [Header("敵のステータス")]
     [SerializeField, Tooltip("体力")]
     private int _healthPoint = 1;
@@ -49,11 +42,11 @@ public class EnemyController : MonoBehaviour
     private string _enemyCurrentString = "";
     private HashSet<string> _defeatEnemyWordSet;  // 敵を倒す単語群
 
-    private ResourcesLoader _resourcesLoader;
+    private ResourcesLoader _resourcesLoader;   //! Unused
     [SerializeField, Tooltip("敵を倒す単語群が書かれたファイル名(拡張子なし)")]
     private string _defeatEnemyWordsFileName = "DefeatEnemyWords";
 
-    private Vector3 _resumeVelocity;
+    private Vector3 _resumeVelocity; // ポーズ中に速度を保持するための変数
 
     private void Awake()
     {
@@ -61,6 +54,15 @@ public class EnemyController : MonoBehaviour
         if(_resourcesLoader != null){
             _resourcesLoader.DefeatEnemyWordsLoaded += OnDefeatEnemyWordsLoaded;
         }
+    }
+
+    private void Initialize()
+    {
+        _movement = GetComponent<EnemyMovement>();
+        _sight = GetComponent<EnemySight>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _isVisibleTarget = false;
+        _resourcesLoader = FindObjectOfType<ResourcesLoader>();
     }
 
     private void Start()
@@ -81,29 +83,24 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        //if (_isPaused) { return; }
-
         // 視界情報(ターゲットの位置)の取得
         Vector3 targetPosition = _targetForChase.transform.position;
         _isVisibleTarget = _sight.CanSeeTarget(targetPosition);
-        //Vector3 vectorToTarget = _sight.CalculateVectorTo(targetPosition);
 
         // 移動関数の呼び出し
-        //_enemyMovement.ChangeSpeed(_isVisibleTarget);
-        //_enemyMovement.Move(_isVisibleTarget, vectorToTarget);
-        _movement.Move(_isVisibleTarget, targetPosition);
+        //_movement.Move(_isVisibleTarget, targetPosition);
 
         // ステートマシンの更新
         _stateMachine.Execute();
     }
 
-    public void HasTakenDamage(int damage)
-    {
-        _healthPoint -= damage;
-    }
-
+    /// <summary>
+    /// 敵がアルファベットを取得したときの処理
+    /// </summary>
+    /// <param name="alphabet"></param>
     public void HasTakenAlphabet(string alphabet)
     {
+        // 取得したアルファベットを固有文字列に追加
         _enemyCurrentString += alphabet;
         _enemyBaseStringText.text = _enemyCurrentString;
 
@@ -119,37 +116,45 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 敵の固有文字列をリセットする
+    /// </summary>
     private void ResetEnemyString()
     {
         _enemyCurrentString = _enemyBaseString;
         _enemyBaseStringText.text = _enemyBaseString;
     }
 
+    /// <summary>
+    /// コルーチンを使って一定時間後に自信を破棄する
+    /// </summary>
     public void DestroySelf(){
         StartCoroutine(DestroyAfterDelaySeconds());
     }
 
-
-    private void Initialize()
-    {
-        _movement = GetComponent<EnemyMovement>();
-        _sight = GetComponent<EnemySight>();
-        _rigidbody = GetComponent<Rigidbody>();
-        _isVisibleTarget = false;
-        _resourcesLoader = FindObjectOfType<ResourcesLoader>();
-    }
-
+    /// <summary>
+    /// 一定時間後に自信を破棄するコルーチン
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator DestroyAfterDelaySeconds()
     {
         yield return new WaitForSeconds(_delaySeconds);
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// 敵を倒す単語を読み込んだときの処理
+    /// </summary>
+    /// <param name="wordset"></param>
     private void OnDefeatEnemyWordsLoaded(HashSet<string> wordset)
     {
         _defeatEnemyWordSet = wordset;
     }
 
+    /// <summary>
+    /// 敵を倒せる単語群を読み込む
+    //! Unused
+    /// </summary>
     private void LoadWards()
     {
         TextAsset textAsset = Resources.Load(_defeatEnemyWordsFileName, typeof(TextAsset)) as TextAsset;
@@ -164,7 +169,6 @@ public class EnemyController : MonoBehaviour
                 {
                     continue;
                 }
-                //Debug.Log(word);
                 _defeatEnemyWordSet.Add(trimmedWord);
             }
         }
@@ -176,6 +180,9 @@ public class EnemyController : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// ポーズ時の動作を登録
+    /// </summary>
     private void RegisterPauseEvent()
     {
         StageGameTimeManager.OnPaused.Subscribe( _ =>
@@ -192,6 +199,9 @@ public class EnemyController : MonoBehaviour
         }).AddTo(this.gameObject);
     }
 
+    /// <summary>
+    /// 再開時の動作を登録
+    /// </summary>
     private void RegisterResumeEvent()
     {
         StageGameTimeManager.OnResumed.Subscribe( _ =>

@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// メガホンの発射を管理するクラス
+/// TODO のちにここに発射部分は分離して実装
+/// </summary>
 public class MegaphoneShot : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

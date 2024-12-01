@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : InputBase
@@ -9,7 +7,6 @@ public class PlayerInput : InputBase
     /// WASD(or 矢印)で移動, spaceでジャンプ, 左クリックで攻撃
     /// マウスで視点移動
     /// </summary>
-
     [Header("移動入力"), Tooltip("WASDキーまたは矢印キー等で移動")]
     [SerializeField] private KeyCode[] _forwardKeys = new KeyCode[] {KeyCode.W, KeyCode.UpArrow};
     [SerializeField] private KeyCode[] _backKeys = new KeyCode[] {KeyCode.S, KeyCode.DownArrow};
@@ -49,6 +46,9 @@ public class PlayerInput : InputBase
         HandleInput();
     }
 
+    /// <summary>
+    /// 入力情報の取得
+    /// </summary>
     private void HandleInput()
     {
         //inputの初期化
@@ -98,7 +98,7 @@ public class PlayerInput : InputBase
         _verticalMouseInput += _mouseInputVector.y;
         _verticalMouseInput = Mathf.Clamp(_verticalMouseInput, -_cameraRotateLimit, _cameraRotateLimit);
     }
-
+    
     public override void DisableInput()
     {
         // 移動(ダッシュ)に関わるinputの初期化

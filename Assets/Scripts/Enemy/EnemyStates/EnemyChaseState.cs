@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyChaseState : EnemyStateBase
@@ -9,6 +7,7 @@ public class EnemyChaseState : EnemyStateBase
 
     public override void Enter()
     {
+        // パスをリセット
         if(_movement.Agent.hasPath)
         {
             _movement.Agent.ResetPath();
@@ -18,6 +17,7 @@ public class EnemyChaseState : EnemyStateBase
 
     public override void Execute()
     {
+        // ターゲットの位置を目的地に設定
         _movement.Agent.SetDestination(_movement.TargetforChase.transform.position);
         _movement.Agent.stoppingDistance = _movement.ChaseStoppingDistance; //目的地に到着したときの停止距離
 
@@ -39,6 +39,7 @@ public class EnemyChaseState : EnemyStateBase
     public override void Exit()
     {
         //Debug.Log("ChaseState Exit");
+        // パスをリセット
         _movement.Agent.ResetPath();
     }
 }

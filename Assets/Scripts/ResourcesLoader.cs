@@ -1,8 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//! Unused
+/// <summary>
+/// リソースの読み込みを行うクラス
+/// </summary>
 public class ResourcesLoader : MonoBehaviour
 {
     private GameObject[] _alphabetPrefabs;

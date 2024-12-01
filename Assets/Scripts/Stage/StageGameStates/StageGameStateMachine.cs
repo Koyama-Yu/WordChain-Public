@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+/// <summary>
+/// ステージにおけるゲームの状態を管理するステートマシン
+/// </summary>
 [Serializable]
 public class StageGameStateMachine : StateMachine
 {

@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
+/// <summary>
+/// システム系(ポーズ等)の入力を管理するクラス
+/// </summary>
 public class SystemInput : InputBase
 {
     [Header("システム系(ポーズ等)の入力")]

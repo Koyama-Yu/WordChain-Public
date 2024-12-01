@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+/// <summary>
+/// プレイヤーのステートマシン
+/// </summary>
 [Serializable]
 public class PlayerStateMachine : StateMachine
 {
-
     /// <summary>
     /// プレイヤーのステート
     /// ・IdleState: 待機時

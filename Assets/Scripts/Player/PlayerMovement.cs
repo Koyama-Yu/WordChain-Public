@@ -3,6 +3,9 @@ using System.Collections.Generic;
 //using UnityEditor.EditorTools;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの移動を制御するクラス
+/// </summary>
 public class PlayerMovement : MonoBehaviour
 {
     [Header("移動")]
@@ -28,7 +31,10 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log(_currentSpeed);
     }
 
-    //水平方向(前後左右)の移動
+    /// <summary>
+    /// 水平方向(前後左右)の移動
+    /// </summary>
+    /// <param name="inputVector"></param>
     public void Move(Vector3 inputVector)
     {
         if (!_canMove) { return; }
@@ -42,11 +48,20 @@ public class PlayerMovement : MonoBehaviour
         transform.position += _moveDirection * _currentSpeed * Time.deltaTime;
     }
 
+    /// <summary>
+    /// rigidbodyに力を加えてジャンプ
+    /// </summary>
+    /// <param name="rigidbody"></param>
     public void Jump(Rigidbody rigidbody)
     {
         rigidbody.AddForce(_jumpForce, ForceMode.Impulse);
     }
 
+    /// <summary>
+    /// 接地しているかどうかをRaycast判定
+    /// </summary>
+    /// <param name="groundCheckPoint"></param>
+    /// <param name="groundLayer"></param>
     public bool IsGrounded(Transform groundCheckPoint, LayerMask groundLayer)
     {
         return Physics.Raycast(groundCheckPoint.position, Vector3.down, _groundCheckOffset, groundLayer);
@@ -69,11 +84,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 移動を可能にする
+    /// </summary>
     public void EnableMovement()
     {
         _canMove = true;
     }
 
+    /// <summary>
+    /// 移動を不可能にする
+    /// </summary>
     public void DisableMovement()
     {
         _canMove = false;

@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの視点を管理するクラス
+/// </summary>
 public class PlayerSight : MonoBehaviour
 {
     [SerializeField, Tooltip("プレイヤーの始点位置")]
@@ -24,6 +25,11 @@ public class PlayerSight : MonoBehaviour
         _camera.transform.rotation = _viewPoint.rotation;
     }
 
+    /// <summary>
+    /// プレイヤーの視点を更新する
+    /// </summary>
+    /// <param name="mouseInputVector"></param>
+    /// <param name="clampedVerticalInput"></param>
     public void RenewViewPoint(Vector2 mouseInputVector, float clampedVerticalInput)
     {
         //マウスのx軸の動きを反映
@@ -31,6 +37,7 @@ public class PlayerSight : MonoBehaviour
             transform.eulerAngles.y + mouseInputVector.x,
             transform.eulerAngles.z);
 
+        //_viewPointに反映
         _viewPoint.rotation = Quaternion.Euler(-clampedVerticalInput,
             _viewPoint.transform.rotation.eulerAngles.y,
             _viewPoint.transform.rotation.eulerAngles.z);
