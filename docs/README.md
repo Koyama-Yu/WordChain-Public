@@ -4,6 +4,7 @@
 
 Web link : https://play.unity.com/en/games/f47fde79-5ccf-4438-bf0b-c10db1f1e845/webgl-build-publish
 
+※ ゲームを起動後, 3秒後に始まります
 
 ## 操作方法
 
@@ -15,7 +16,6 @@ Web link : https://play.unity.com/en/games/f47fde79-5ccf-4438-bf0b-c10db1f1e845/
 - 左クリック : アルファベット発射
 - マウスホイール : アルファベット切り替え
 - エスケープキー : カーソル再表示(ゲームから抜ける)
-
 
 ## 遊び方
 
@@ -29,4 +29,4 @@ Web link : https://play.unity.com/en/games/f47fde79-5ccf-4438-bf0b-c10db1f1e845/
 - ※ギミックは未実装
 - NやSは磁石の性質があっても面白いかも
 - ダッシュするとスタミナが減っていき、一度完全に尽きるとかなり足が遅くなってしまうので注意
-- Goalを見つけて、入ることができればステージクリア
+- Goalを見つけて、到達できればステージクリア

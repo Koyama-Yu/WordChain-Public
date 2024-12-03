@@ -31,10 +31,12 @@
 - アルファベットがぶつけられたらその方向を振り返る
 - 消しゴム的アイテム
 
-
 ## プログラミングについてのTo Do
 
-- EnemyMovementの方に, NavMeshの処理を書く
-- データ読み込み部分を整理
+- ~EnemyMovementの方に, NavMeshの処理を書く~ -> 完了
+- NavmeshAgentの状態に応じた速度変更
+- Dataクラスの用意(Scriptable Object?)
+- データ読み込み部分を整理(ResoursesLoaderを使う or Asset Bundle)
 - 簡単なゲームクリア(適当にトリガーを用意)
 - それに応じてGameManagerも変更
+- summaryのコメントが2行以上ならbrタグをつけるか, ピリオドを打つ

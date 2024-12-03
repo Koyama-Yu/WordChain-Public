@@ -8,20 +8,27 @@ using UnityEngine.AI;
 /// </summary>
 public class EnemyMovement : MonoBehaviour
 {
-    [Header("移動")]
-    [SerializeField, Tooltip("さまよい時のスピード")] private float _wanderSpeed = 1.0f;
-    [SerializeField, Tooltip("追跡時のスピード")] private float _chaseSpeed = 3.0f;
-    [SerializeField, Tooltip("さまよい時の目的地に到着したときの停止距離")] private float _wanderStoppingDistance = 0f;
-    [SerializeField, Tooltip("追跡時の目的地に到着したときの停止距離")] private float _chaseStoppingDistance = 2.0f;
+    [Header("移動スピード")]
+    [SerializeField, Tooltip("さまよい時のスピード")]
+    private float _wanderSpeed = 1.0f;
+    [SerializeField, Tooltip("追跡時のスピード")]
+    private float _chaseSpeed = 3.0f;
+    [Header("目的地に到着したときの停止距離")]
+    [SerializeField, Tooltip("さまよい時の目的地に到着したときの停止距離")]
+    private float _wanderStoppingDistance = 0f;
+    [SerializeField, Tooltip("追跡時の目的地に到着したときの停止距離")]
+    private float _chaseStoppingDistance = 2.0f;
 
     private NavMeshAgent _agent;
-    public NavMeshAgent Agent => _agent;
-    public GameObject TargetforChase{get; set;}
+    //public NavMeshAgent Agent => _agent;
 
     private float _currentSpeed = 0.0f;
     public float CurrentSpeed => _currentSpeed;
+    private Vector3 _resumeVelocity; // ポーズ中に速度を保持するための変数
     public float WanderStoppingDistance => _wanderStoppingDistance;
     public float ChaseStoppingDistance => _chaseStoppingDistance;
+
+    public float RANDOM_WANDER_DISTANCE = 5.0f; // Wander時のランダム移動距離
 
     private void Awake()
     {
@@ -39,6 +46,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     //TODO 後からここはこれは変更する予定
+    //! Unused
     private void ChangeSpeed(bool isVisibleTarget)
     {
         if (isVisibleTarget)
@@ -52,30 +60,79 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// 状態に応じて, NavMeshAgentの目的地を設定する
-    //! Unused
+    /// Wander時の目的地をNavMeshAgentに設定
     /// </summary>
-    /// <param name="isVisibleTarget"></param>
-    /// <param name="targetPosition"></param>
-    private void SetDestination(bool isVisibleTarget, Vector3 targetPosition)
+    public void SetWanderDestination()
     {
-        if (isVisibleTarget)
-        {
-            _agent.SetDestination(targetPosition);
-            _agent.stoppingDistance = _chaseStoppingDistance; //目的地に到着したときの停止距離
-        }
-        else if (!_agent.hasPath)
-        {
-            float newX = transform.position.x + Random.Range(-5, 5);
-            float newZ = transform.position.z + Random.Range(-5, 5);
+        // さまよい時の目的地をランダムに設定
+        float newX = transform.position.x 
+            + Random.Range(-RANDOM_WANDER_DISTANCE, RANDOM_WANDER_DISTANCE);
+        float newZ = transform.position.z 
+            + Random.Range(-RANDOM_WANDER_DISTANCE, RANDOM_WANDER_DISTANCE);
 
-            Vector3 NextPosition = new Vector3(newX, transform.position.y, newZ);
+        Vector3 NextPosition = new Vector3(newX, transform.position.y, newZ);
 
-            _agent.SetDestination(NextPosition);  //目的地の設定
-            _agent.stoppingDistance = _wanderStoppingDistance; //目的地に到着したときの停止距離
-
-        }
-
-        ChangeSpeed(isVisibleTarget);
+        _agent.SetDestination(NextPosition);  //目的地の設定
+        _agent.stoppingDistance = _wanderStoppingDistance; //目的地に到着したときの停止距離
     }
+
+    /// <summary>
+    /// Chase時の目的地をNavMeshAgentに設定 <br/>
+    /// targetPositionは, ChaseStateで_enemy.TargetPositionを渡す
+    /// </summary>
+    public void SetChaseDestination(Vector3 targetPosition)
+    {
+        _agent.SetDestination(targetPosition);
+        _agent.stoppingDistance = _chaseStoppingDistance; //目的地に到着したときの停止距離
+    }
+
+    public void SetDestination(Vector3 destination)
+    {
+        _agent.SetDestination(destination);
+    }
+
+    /// <summary>
+    /// Pathの存在を確認してからリセット
+    /// </summary>
+    public void ResetPath()
+    {
+        if(_agent.hasPath)
+        {
+            _agent.ResetPath();
+        }
+    }
+
+    public bool hasPath()
+    {
+        return _agent.hasPath;
+    }
+
+    /// <summary>
+    /// ゲーム停止時の処理.
+    /// NavMeshAgentの移動を停止.
+    /// </summary>
+    public void DisableMovement()
+    {
+        if (_agent != null)
+        {
+            _agent.isStopped = true;
+            _resumeVelocity = _agent.velocity;
+            _agent.velocity = Vector3.zero;
+        }
+    }
+
+    /// <summary>
+    /// ゲーム再開時の処理.
+    /// NavMeshAgentの移動を再開.
+    /// </summary>
+    public void EnableMovement()
+    {
+        if (_agent != null)
+        {
+            _agent.isStopped = false;
+            _agent.velocity = _resumeVelocity;
+        }
+    }
+
+
 }

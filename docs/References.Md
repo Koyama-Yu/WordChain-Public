@@ -1,4 +1,3 @@
-
 # 使用したアプリ・ライブラリ等
 
 ## Unity
@@ -20,6 +19,7 @@
 - ONNX Runtime : ver 1.20.0 (https://github.com/microsoft/onnxruntime/releases)
 - Microsoft.ML.OnnxRuntime ver 1.19.2 (https://www.nuget.org/packages/Microsoft.ML.OnnxRuntime/#versions-body-tab)
 - Whisper : https://github.com/openai/whisper
+- Unity Sentis
 
 # 参考資料
 

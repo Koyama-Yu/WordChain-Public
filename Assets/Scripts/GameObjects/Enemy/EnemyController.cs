@@ -28,6 +28,8 @@ public class EnemyController : MonoBehaviour
     [Header("追跡対象設定")]
     [SerializeField, Tooltip("視界に入った後の追跡対象")]
     private GameObject _targetForChase; // chaseTargetだと関数名っぽくなるので変更した
+    private Vector3 _targetPosition;    // _targetForChaseの位置
+    public Vector3 TargetPosition => _targetPosition;
 
     private EnemyStateMachine _stateMachine;
     public EnemyStateMachine StateMachine => _stateMachine;
@@ -45,8 +47,6 @@ public class EnemyController : MonoBehaviour
     private ResourcesLoader _resourcesLoader;   //! Unused
     [SerializeField, Tooltip("敵を倒す単語群が書かれたファイル名(拡張子なし)")]
     private string _defeatEnemyWordsFileName = "DefeatEnemyWords";
-
-    private Vector3 _resumeVelocity; // ポーズ中に速度を保持するための変数
 
     private void Awake()
     {
@@ -69,7 +69,6 @@ public class EnemyController : MonoBehaviour
     {
         _stateMachine = new EnemyStateMachine(this, _movement);
         _stateMachine.Initialize(_stateMachine.IdleState);
-        _movement.TargetforChase = _targetForChase;
         _enemyBaseStringText.text = _enemyBaseString;
         _enemyCurrentString = _enemyBaseString;
         LoadWards();
@@ -84,8 +83,8 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         // 視界情報(ターゲットの位置)の取得
-        Vector3 targetPosition = _targetForChase.transform.position;
-        _isVisibleTarget = _sight.CanSeeTarget(targetPosition);
+        _targetPosition = _targetForChase.transform.position;
+        _isVisibleTarget = _sight.CanSeeTarget(_targetPosition);
 
         // 移動関数の呼び出し
         //_movement.Move(_isVisibleTarget, targetPosition);
@@ -187,14 +186,9 @@ public class EnemyController : MonoBehaviour
     {
         StageGameTimeManager.OnPaused.Subscribe( _ =>
         {
-            // _movement.DisableMovement();
+            _movement.DisableMovement();
             _rigidbody.Pause(gameObject);
-            if(_movement.Agent != null)
-            {
-                _movement.Agent.isStopped = true;
-                _resumeVelocity = _movement.Agent.velocity;
-                _movement.Agent.velocity = Vector3.zero;
-            }
+            
             //! アニメーションを追加した場合はここにanimator.speed = 0fを追加する
         }).AddTo(this.gameObject);
     }
@@ -206,14 +200,9 @@ public class EnemyController : MonoBehaviour
     {
         StageGameTimeManager.OnResumed.Subscribe( _ =>
         {
-            // _movement.DisableMovement();
+            _movement.EnableMovement();
             _rigidbody.Resume(gameObject);
 
-            if(_movement.Agent != null)
-            {
-                _movement.Agent.isStopped = false;
-                _movement.Agent.velocity = _resumeVelocity;
-            }
             //! アニメーションを追加した場合はここにanimator.speed = 0fを追加する
         }).AddTo(this.gameObject);
     }
