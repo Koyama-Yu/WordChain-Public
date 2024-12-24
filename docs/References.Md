@@ -39,7 +39,7 @@
 
 - Level up your code with game programming patterns(日本語版) : https://unity3d.jp/game/game-ebooks/level-up-your-code-with-game-programming-patterns/
 - ↑のサンプルコード : https://github.com/Unity-Technologies/game-programming-patterns-demo/tree/backstage-catalog-validator
-- game prohttps://gameprogrammingpatterns.com
+- game programming patterns : https://gameprogrammingpatterns.com
 
 ### コードのスタイルガイド
 

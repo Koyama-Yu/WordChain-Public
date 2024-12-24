@@ -103,10 +103,11 @@ public class EnemyController : MonoBehaviour
         _enemyCurrentString += alphabet;
         _enemyBaseStringText.text = _enemyCurrentString;
 
-        // 敵を倒す単語に含まれていたら消滅
+        // 敵を倒す単語に含まれていたらHPを減らす
         if(_defeatEnemyWordSet.Contains(_enemyCurrentString))
         {
-            DestroySelf();
+            _healthPoint--;
+            //DestroySelf();
         }
         // 文字列_maxBaseStringLengthを超えたらリセット
         else if(_enemyBaseStringText.text.Length > _maxBaseStringLength)

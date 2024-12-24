@@ -11,6 +11,7 @@ public class AlphabetController : MonoBehaviour
     private Rigidbody _rigidbody;
     private float _remainingLifeTime;   // アルファベットの残り生存時間
     private bool _isPaused = false;
+    private bool _canUseCollision = true;
 
     private void Start()
     {
@@ -43,9 +44,18 @@ public class AlphabetController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        // 衝突を無効化している場合は処理を行わない
+        if (!_canUseCollision) { return; }
+        
         // 敵に当たったらその敵にアルファベットを付与
         if (other.gameObject.tag == "Enemy")
         {
+            // 衝突を無効化
+            //! フラグを使用しないとおそらく処理時間がかかり、衝突判定が続いてしまうのでこの方法で対処
+            //? 他に良い方法ある?
+            _canUseCollision = false;
+            GetComponent<Collider>().enabled = false;
+            
             EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
             enemy.HasTakenAlphabet(gameObject.name);
             Destroy(this.gameObject);
