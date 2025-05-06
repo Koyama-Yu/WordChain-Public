@@ -85,8 +85,12 @@ public class Megaphone : MonoBehaviour
     private void Shot()
     {
         // TODO _playerInputのメンバはなるべくキャッシュして使いたい
+
+        // プレイヤーがダッシュ中かどうかで発射位置と発射力を変える
         Vector3 spawnPosition = _playerInput.IsDashing ? _DashNozzle.position : _nonDashNozzle.position;
         float forceStrength = _playerInput.IsDashing ? _runningForceStrength : _baseForceStrength;
+
+        // アルファベットを生成し、発射
         Quaternion rotation = transform.rotation * Quaternion.Euler(0, 180, 0);
         GameObject alphabet = Instantiate(_alphabetPrefabs[_selectedAlphabetIndex], spawnPosition, rotation);
         alphabet.GetComponent<Rigidbody>().AddForce(_player.Sight.ViewPoint.transform.forward * forceStrength);
@@ -147,7 +151,14 @@ public class Megaphone : MonoBehaviour
     /// </summary>
     private void RenewUI()
     {
-        _selectedAlphabetText.text = _currentAlpabetCharactor.ToString();
+        //TODO! 一次的に変更しているので後で直す
+        if(_currentAlpabetCharactor.ToString() == "D")
+        {
+            _selectedAlphabetText.text = "O";
+        }
+        else{
+            _selectedAlphabetText.text = _currentAlpabetCharactor.ToString();
+        }
     }
 
     /// <summary>

@@ -10,6 +10,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField, Tooltip("体力")]
     private int _healthPoint = 1;
     public int HealthPoint => _healthPoint;
+    [SerializeField, Tooltip("敵の攻撃力")]
+    private float _attackDamage = 10.0f;
+    public float AttackDamage => _attackDamage;
     [SerializeField, Tooltip("敵が死亡してから消滅するまでの時間")]
     private float _delaySeconds = 1.0f;
     [SerializeField, Tooltip("敵の固有文字列")]
@@ -25,9 +28,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField, Tooltip("追跡時の移動速度")]
     public float _chaseSpeed = 3.0f;
 
-    [Header("追跡対象設定")]
-    [SerializeField, Tooltip("視界に入った後の追跡対象")]
-    private GameObject _targetForChase; // chaseTargetだと関数名っぽくなるので変更した
+    [Header("追跡・攻撃対象設定")]
+    [SerializeField, Tooltip("視界に入った後の追跡・攻撃対象")]
+    private GameObject _target;
     private Vector3 _targetPosition;    // _targetForChaseの位置
     public Vector3 TargetPosition => _targetPosition;
 
@@ -37,7 +40,13 @@ public class EnemyController : MonoBehaviour
     private bool _isVisibleTarget;
     public bool IsVisibleTarget => _isVisibleTarget;
 
+    [Header("コンポーネント")]
     private EnemyMovement _movement;
+    public EnemyMovement Movement => _movement;
+    private EnemyAnimation _animation;
+    public EnemyAnimation Animation => _animation;
+    private EnemyCombat _combat;
+    public EnemyCombat Combat => _combat;
     private EnemySight _sight;
     private Rigidbody _rigidbody;
 
@@ -59,7 +68,9 @@ public class EnemyController : MonoBehaviour
     private void Initialize()
     {
         _movement = GetComponent<EnemyMovement>();
+        _animation = GetComponent<EnemyAnimation>();
         _sight = GetComponent<EnemySight>();
+        _combat = GetComponent<EnemyCombat>();
         _rigidbody = GetComponent<Rigidbody>();
         _isVisibleTarget = false;
         _resourcesLoader = FindObjectOfType<ResourcesLoader>();
@@ -83,7 +94,7 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         // 視界情報(ターゲットの位置)の取得
-        _targetPosition = _targetForChase.transform.position;
+        _targetPosition = _target.transform.position;
         _isVisibleTarget = _sight.CanSeeTarget(_targetPosition);
 
         // 移動関数の呼び出し
@@ -189,8 +200,7 @@ public class EnemyController : MonoBehaviour
         {
             _movement.DisableMovement();
             _rigidbody.Pause(gameObject);
-            
-            //! アニメーションを追加した場合はここにanimator.speed = 0fを追加する
+            _animation.DisableAnimation();
         }).AddTo(this.gameObject);
     }
 
@@ -203,8 +213,7 @@ public class EnemyController : MonoBehaviour
         {
             _movement.EnableMovement();
             _rigidbody.Resume(gameObject);
-
-            //! アニメーションを追加した場合はここにanimator.speed = 0fを追加する
+            _animation.EnableAnimation();
         }).AddTo(this.gameObject);
     }
 

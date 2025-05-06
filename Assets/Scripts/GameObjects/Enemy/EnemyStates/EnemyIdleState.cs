@@ -1,3 +1,4 @@
+using UnityEngine;
 using MyUtilities;
 
 public class EnemyIdleState : EnemyStateBase
@@ -7,10 +8,12 @@ public class EnemyIdleState : EnemyStateBase
     // コンストラクタ
     public EnemyIdleState(EnemyController enemy, EnemyMovement movement) : base(enemy, movement) { }
 
-    // public void Enter()
-    // {
-    //     Debug.Log("DieState Enter");
-    // }
+    public override void Enter()
+    {
+        // Idleアニメーションを再生(Animatorのパラメータをすべてfalseにする)
+        _enemy.Animation.PlayIdleAnimation();
+        Debug.Log("IdleState Enter");
+    }
 
     public override void Execute()
     {
@@ -36,8 +39,8 @@ public class EnemyIdleState : EnemyStateBase
         }
     }
 
-    // public void Exit()
-    // {
-    //     Debug.Log("DieState Exit");
-    // }
+    public override void Exit()
+    {
+        Debug.Log("IdleState Exit");
+    }
 }

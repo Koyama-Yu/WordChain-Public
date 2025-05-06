@@ -2,6 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// カーソルの表示・非表示を切り替えるクラス
+/// ! Unused
 /// </summary>
 public class CursorLocker : Singleton<CursorLocker>
 {

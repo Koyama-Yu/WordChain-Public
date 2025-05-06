@@ -5,10 +5,12 @@ public class EnemyDieState : EnemyStateBase
     // コンストラクタ
     public EnemyDieState(EnemyController enemy, EnemyMovement movement) : base(enemy, movement) { }
 
-    // public void Enter()
-    // {
-    //     Debug.Log("DieState Enter");
-    // }
+    public override void Enter()
+    {
+        // 死亡アニメーションを再生(AnimatorのDieパラメータをtrueにする)
+        _enemy.Animation.PlayAnimation(_enemy.Animation.Die);
+        Debug.Log("DieState Enter");
+    }
 
     public override void Execute()
     {

@@ -9,7 +9,8 @@ public class EnemyWanderState : EnemyStateBase
     public override void Enter()
     {
         _movement.SetWanderDestination();
-
+        // Wanderアニメーションを再生(AnimatorのWanderパラメータをtrueにする)
+        _enemy.Animation.PlayAnimation(_enemy.Animation.Wander);
         Debug.Log("WanderState Enter");
     }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using MyUtilities;
 
 public class StageGamePlayState : StageGameStateBase
 {
@@ -9,10 +10,23 @@ public class StageGamePlayState : StageGameStateBase
     public override void Enter()
     {
         Debug.Log("PlayState Enter");
+
+        // カーソルを非表示
+        CursorManager.LockCursor();
     }
 
     public override void Execute()
     {
+        // 入力によってカーソルの表示・非表示を切り替える
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CursorManager.UnlockCursor();
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            CursorManager.LockCursor();
+        }
+        
         // ポーズ入力があればポーズ状態に遷移
         if (Input.GetKeyDown(KeyCode.Tab))
         {

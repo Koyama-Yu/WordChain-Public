@@ -9,6 +9,8 @@ public class EnemyChaseState : EnemyStateBase
     {
         // パスをリセット
         _movement.ResetPath();
+        // Chaseアニメーションを再生(AnimatorのChaseパラメータをtrueにする)
+        _enemy.Animation.PlayAnimation(_enemy.Animation.Chase);
         Debug.Log("ChaseState Enter");
     }
 
@@ -21,6 +23,13 @@ public class EnemyChaseState : EnemyStateBase
         if(_enemy.HealthPoint <= 0)
         {
             _enemy.StateMachine.TransitionTo(_enemy.StateMachine.DieState);
+            return;
+        }
+
+        // ターゲットに到達したら、攻撃状態に遷移
+        if (_movement.IsTargetInAttackRange(_enemy.TargetPosition, _enemy.transform.position))
+        {
+            _enemy.StateMachine.TransitionTo(_enemy.StateMachine.AttackState);
             return;
         }
 

@@ -27,7 +27,7 @@ public class PlayerIdleState : PlayerStateBase
         }
 
         // HealthPointが0になったら、死亡状態に遷移
-        if (_player.HealthPoint <= 0)
+        if (_player.Status.HealthPoint <= 0)
         {
             _player.StateMachine.TransitionTo(_player.StateMachine.DieState);
             return;

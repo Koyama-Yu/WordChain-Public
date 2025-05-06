@@ -1,26 +1,22 @@
-using UnityEngine;
-using UnityEngine.UI;
-
 /// <summary>
 /// スタミナを管理するクラス
 /// </summary>
-public class Stamina : MonoBehaviour
+public class Stamina : GaugeBase
 {
-
-    private Player _player;
-    public Slider staminaSlider;
-
-
-    void Start()
+    private void Start()
     {
-        staminaSlider = GameObject.Find("StaminaBar").GetComponent<Slider>();
-        staminaSlider.value = staminaSlider.maxValue;
-        _player = GameObject.Find("Player").GetComponent<Player>();
+        Initialize();
+        SetMaxValue(Status.MaxStamina);
     }
 
-    void Update()
+    public override void UpdateGauge()
     {
-        staminaSlider.value = _player.GetStamina();
+        SetValue(Status.Stamina);
+    }
+
+    private void Update()
+    {
+        UpdateGauge();
     }
 
 }

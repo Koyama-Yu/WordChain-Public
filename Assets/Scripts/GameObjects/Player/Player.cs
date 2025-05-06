@@ -1,15 +1,17 @@
 using UnityEngine;
 // using UnityEngine.UI;
 using UniRx;
+//using UnityEditor.EditorTools;
 
-//! Unused
+//! Unused Libraries
 // using Unity.VisualScripting;
 // using Unity.VisualScripting.Antlr3.Runtime.Tree;
 // using UnityEditor.Experimental.GraphView;
 
 
 [RequireComponent(typeof(PlayerInput), typeof(PlayerMovement), typeof(PlayerSight))]
-public class Player : MonoBehaviour
+[RequireComponent(typeof(PlayerStatus))]    //TODO もう少しきれいに分けたい
+public class Player : MonoBehaviour, IDamageable
 {
     [Header("レイヤー")]
     [SerializeField, Tooltip("障害物判定用レイヤー")]
@@ -18,21 +20,6 @@ public class Player : MonoBehaviour
     private LayerMask _groundLayer;
     [SerializeField]
     private Transform _groundCheckPoint; //接地判定用のオブジェクトの位置
-
-    [Header("プレイヤーステータス")]
-    [SerializeField]
-    private int _healthPoint = 5;
-    public int HealthPoint => _healthPoint;
-    [SerializeField]
-    private int _maxHealthPoint = 5;
-    [SerializeField]
-    private float _stamina;
-    [SerializeField]
-    private float _maxStamina;
-    [SerializeField, Tooltip("スタミナの回復スピード")]
-    private float _staminaIncreaseSpeed;
-    [SerializeField, Tooltip("スタミナの減少スピード")]
-    private float _staminaDecreaseSpeed;
 
     [Header("メガホン")]
     [SerializeField]
@@ -45,6 +32,8 @@ public class Player : MonoBehaviour
     public PlayerMovement Movement => _movement;
     private PlayerSight _sight;
     public PlayerSight Sight => _sight;
+    private PlayerStatus _status;
+    public PlayerStatus Status => _status;
 
     private PlayerStateMachine _stateMachine;
     public  PlayerStateMachine StateMachine => _stateMachine;
@@ -68,18 +57,18 @@ public class Player : MonoBehaviour
 
     private void Initialize()
     {
-        _healthPoint = _maxHealthPoint;
-        _stamina = _maxStamina;
         _input = GetComponent<PlayerInput>();
         _movement = GetComponent<PlayerMovement>();
         _sight = GetComponent<PlayerSight>();
         _rigidbody = GetComponent<Rigidbody>();
+        _status = GetComponent<PlayerStatus>();
         _stateMachine = new PlayerStateMachine(this);
 
     }
 
     private void Start()
     {
+        _status.Initialize();
         _stateMachine.Initialize(_stateMachine.IdleState);
 
         // ポーズ時の動作を登録
@@ -153,20 +142,6 @@ public class Player : MonoBehaviour
         Debug.DrawRay(transform.position, transform.forward * 10, Color.blue);
     }
 
-    // HPを渡す
-    // TODO これを使わないように変更
-    public int GetHealthPoint()
-    {
-        return _healthPoint;
-    }
-
-    // スタミナを渡す
-    // TODO これを使わないように変更
-    public float GetStamina()
-    {
-        return _stamina;
-    }
-
     /// <summary>
     ///  プレイヤーの状態においてスタミナの変更を行う
     /// </summary>
@@ -178,14 +153,14 @@ public class Player : MonoBehaviour
         //疲れていないあるいはダッシュしていないときスタミナ回復
         if (isTired || !isDashing) 
         {
-            _stamina += Time.deltaTime * _staminaIncreaseSpeed;
-            _stamina = Mathf.Min(_stamina, _maxStamina);
+            _status.Stamina += Time.deltaTime * _status.StaminaIncreaseSpeed;
+            _status.Stamina = Mathf.Min(_status.Stamina, _status.MaxStamina);
         }
         //ダッシュ中はスタミナを減らす
         else if (isDashing)
         {
-            _stamina -= Time.deltaTime * _staminaDecreaseSpeed;
-            _stamina = Mathf.Max(_stamina, 0f);
+            _status.Stamina -= Time.deltaTime * _status.StaminaDecreaseSpeed;
+            _status.Stamina = Mathf.Max(_status.Stamina, 0f);
         }
     }
 
@@ -195,15 +170,23 @@ public class Player : MonoBehaviour
     private void CheckTiredness()
     {
         //スタミナが0以下になったら疲れる
-        if (_stamina <= 0)
+        if (_status.Stamina <= 0)
         {
             _isTired = true;
         }
         //スタミナが最大値になったら疲れを解消
-        if(_isTired && _stamina >= _maxStamina)
+        if(_isTired && _status.Stamina >= _status.MaxStamina)
         {
             _isTired = false;
         }
+    }
+
+    /// <summary>
+    /// プレイヤーがダメージを受けたときの処理
+    /// </summary>
+    public void TakeDamage(float damage)
+    {
+        _status.HealthPoint = Mathf.Clamp(_status.HealthPoint - damage, 0f, _status.HealthPoint);
     }
 
     /// <summary>

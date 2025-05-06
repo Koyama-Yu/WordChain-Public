@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 /// <summary>
 /// 敵の移動を管理するクラス
-/// TODO 現在はNavMeshによる処理をStateMachineで記述ているがこっちに書くようにする(関数化などする)
+/// TODO 現在はNavMeshによる処理をStateMachineで記述しているがこっちに書くようにする(関数化などする)
 /// </summary>
 public class EnemyMovement : MonoBehaviour
 {
@@ -18,6 +18,8 @@ public class EnemyMovement : MonoBehaviour
     private float _wanderStoppingDistance = 0f;
     [SerializeField, Tooltip("追跡時の目的地に到着したときの停止距離")]
     private float _chaseStoppingDistance = 2.0f;
+    [SerializeField, Tooltip("攻撃から外れるまでの距離")]
+    private float _leftAttackDistance = 1.0f;
 
     private NavMeshAgent _agent;
     //public NavMeshAgent Agent => _agent;
@@ -38,11 +40,6 @@ public class EnemyMovement : MonoBehaviour
     private void Initialize()
     {
         _agent = GetComponent<NavMeshAgent>();
-    }
-
-    private void Update()
-    {
-        //Move();
     }
 
     //TODO 後からここはこれは変更する予定
@@ -89,6 +86,23 @@ public class EnemyMovement : MonoBehaviour
     public void SetDestination(Vector3 destination)
     {
         _agent.SetDestination(destination);
+    }
+
+    /// <summary>
+    /// ターゲットが攻撃範囲にいるかどうかを確認する
+    /// </summary>
+    public bool IsTargetInAttackRange(Vector3 targetPosition, Vector3 myPosition)
+    {
+        float distance = Vector3.Distance(targetPosition, myPosition);
+        return distance <= _agent.stoppingDistance + _leftAttackDistance;
+    }
+
+    public void LookAtTarget(Vector3 targetPosition)
+    {
+        Vector3 targetDirection = targetPosition - transform.position;
+        targetDirection.y = 0; // y軸の回転を無視する
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5.0f);
     }
 
     /// <summary>

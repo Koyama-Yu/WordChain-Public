@@ -6,12 +6,9 @@
 - game programming paternsを参考
 - 移動関係はWalkとかDashとかではなく一括でMoveとかにする -> subStateとしてWalk, Dash, TiredMoveとかで実装の方が良い?
 
-
 ## 敵の処理
 
 のちの実装によるが単語検索を現在はハッシュにしているが, 候補を出力できるようにするためにはIndexOfや正規表現を使う必要がある
-
-
 
 ## その他思いついた直し事項
 
@@ -22,7 +19,8 @@
 - PauseとResumeはより汎用的にStopとかにした方が良い?
 - canMoveとかのフラグ名変えたい(なるべく!記号をif文に書かないような名前に)
 - InputBaseにHandleInput入れるか()メンバとかもそっちに含めれない?
-
+- ゲームプレイ中のUIを管理するクラスの実装
+- ポーズ中などに, 他のUI表示をON/OFFする(体力表示や右上のtab:pauseなど)
 
 ## その他
 
